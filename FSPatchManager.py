@@ -139,21 +139,21 @@ def ensurePatchManagerDirs():
 	ensureDirectory(GEN_PATCH_PATH)
 	ensureDirectory(GEN_REVERT_PATH)
 
+def getPathsHelper(rootDir):
+	return list([os.path.join(root, name) for root, dirs, files in os.walk(rootDir, topdown = True) for name in files])
+
 def getPathMapHelper(rootDir):
 	pathMap = {}
 	for modName in os.listdir(rootDir):
 		currModPath = os.path.join(rootDir, modName)
 		if not os.path.isdir(currModPath):
 			continue
-		pathMap[modName] = list([os.path.join(root, name) for root, dirs, files in os.walk(currModPath, topdown = True) for name in files])
+		pathMap[modName] = getPathsHelper(currModPath)
 	return pathMap
 
 def getPatchPaths():
 	global PATCH_PATH
 	return getPathMapHelper(PATCH_PATH)
-
-def getPathsHelper(rootDir):
-	return list([os.path.join(root, name) for root, dirs, files in os.walk(rootDir, topdown = True) for name in files])
 
 def getGenPatchPaths():
 	global GEN_PATCH_PATH
@@ -277,22 +277,22 @@ def main(args):
 	try:
 		settingsPath = args[1]
 		if not os.path.isfile(settingsPath):
-			raise(IOError())
+			raise(IOError('Unable to access the configuration file.'))
 		loadSettings(settingsPath)
 		if not APP_DATA_DIR:
-			raise(ValueError())
+			raise(ValueError('APP_DATA_DIR not set by configuration.'))
 		if not LOG_PATH:
-			raise(ValueError())
+			raise(ValueError('LOG_PATH not set by configuration.'))
 		if not PATCH_PATH:
-			raise(ValueError())
+			raise(ValueError('PATCH_PATH not set by configuration.'))
 		if not REVERT_PATH:
-			raise(ValueError())
+			raise(ValueError('REVERT_PATH not set by configuration.'))
 		if not GEN_PATCH_PATH:
-			raise(ValueError())
+			raise(ValueError('GEN_PATCH_PATH not set by configuration.'))
 		if not GEN_REVERT_PATH:
-			raise(ValueError())
+			raise(ValueError('GEN_REVERT_PATH not set by configuration.'))
 	except Exception as e:
-		print('Error parsing settings file.')
+		print('There was an error while processing the configuration file.')
 		raise(e)
 	ensurePatchManagerDirs()
 	invalidBackups, preExistingPatches = verifyBackups()
