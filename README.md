@@ -1,6 +1,10 @@
 # File System Patch Manager
 #### FSPatchManager.py
-For managing applications and removals of modular file overwrites of an application's resources, when they are represented by a file tree.
+For managing applications and removals of modular file edits or replacements of an application's resources, when those resources are represented by a file tree.
+
+## Installation
+
+The **FSPM** currently requires Python 3.2 installed on your machine. Later versions may work.
 
 ## Usage
 
